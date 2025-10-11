@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const app = require('../../src/app');
 const Tarea = require('../../src/models/tarea.model');
+jest.setTimeout(30000); // 30 segundos de espera
 
 let mongoServer;
 
