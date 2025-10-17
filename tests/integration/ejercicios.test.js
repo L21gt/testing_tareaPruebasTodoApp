@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const app = require('../../src/app');
 const Tarea = require('../../src/models/tarea.model');
-jest.setTimeout(30000); // 30 segundos de espera
+jest.setTimeout(60000); // 60 segundos de espera
 
 let mongoServer;
 
@@ -99,4 +99,20 @@ describe('🎓 EJERCICIOS PARA ESTUDIANTES', () => {
     expect(res.statusCode).toBe(500);
     expect(res.body).toHaveProperty('error');
   });
+
+test('DELETE /api/tareas/:id elimina una tarea existente', async () => {
+    const tarea = await Tarea.create({ title: 'Tarea a eliminar' });
+    
+    const res = await request(app)
+      .delete(`/api/tareas/${tarea._id}`);
+    
+    expect(res.statusCode).toBe(204);
+    expect(res.body.message).toBe(undefined);
+    
+
+    const getRes = await request(app).get(`/api/tareas/${tarea._id}`);
+    expect(getRes.statusCode).toBe(404);
+  });
+
+
 });
