@@ -1,0 +1,46 @@
+# Workflow para el Laboratorio Práctico de Testing
+# Objetivo: Asegurar un coverage del 80%
+
+name: CI - Laboratorio de Pruebas (80% Coverage)
+
+# Cuándo se ejecuta (igual que los demos)
+on:
+  push:
+    branches: [main, feature/*]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # Definimos un solo trabajo llamado "build-and-test"
+  build-and-test:
+    name: "Construir y Probar (Coverage 80%)"
+    runs-on: ubuntu-latest # Usar una máquina virtual de Ubuntu
+
+    steps:
+      # 1. Obtener el código (como en el demo)
+      - name: Obtener código del repositorio
+        uses: actions/checkout@v4
+
+      # 2. Configurar Node.js (como en el demo)
+      - name: Configurar Node.js v18
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm" # Agregamos caché para velocidad
+
+      # 3. Instalar dependencias (usamos 'ci' como en el demo 05)
+      # 'npm ci' es más rápido y seguro para CI que 'npm install'
+      - name: Instalar dependencias
+        run: npm ci
+
+      # 4. Ejecutar pruebas con coverage
+      - name: Ejecutar Pruebas con Coverage (Umbral 80%)
+        # Asumimos que tu comando 'jest --coverage' está en un script.
+        # Si no, podemos usar 'npx jest --coverage'
+        # ¡Pregúntame si no estás seguro!
+        run: npm run test -- --coverage
+
+        # Explicación del comando:
+        # 'npm run test' -> Ejecuta el script "test" en tu package.json
+        # '--'          -> Pasa los siguientes argumentos directamente al comando (a Jest)
+        # '--coverage'  -> Le dice a Jest que mida el coverage
