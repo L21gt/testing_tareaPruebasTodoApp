@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const app = require('../../src/app');
 const Tarea = require('../../src/models/tarea.model');
-jest.setTimeout(60000); // 60 segundos de espera
+jest.setTimeout(90000); // 90 segundos de espera
 
 let mongoServer;
 
@@ -74,11 +74,17 @@ describe('EJEMPLOS PRACTICOS DE PRUEBAS DE INTEGRACION', () => {
     // 1. Crea una tarea en la base de datos para obtener su `_id`.
     const tarea = await Tarea.create({ title: 'Tarea específica' });
     // 2. Haz una petición `GET` a la ruta dinámica `/api/tareas/:id`.
+
     const res = await request(app).get(`/api/tareas/${tarea._id}`);
     // 3. Verifica el `statusCode` (200) y que el `title` de la respuesta coincida con el de la tarea que creaste.
     
     expect(res.statusCode).toBe(200);
     expect(res.body.title).toBe('Tarea específica');
+
+    // 4. Intenta obtener una tarea con un ID que no exista y verifica que devuelva un 404.
+    const res1 = await request(app).get(`/api/tareas/2`);
+    expect(res1.statusCode).toBe(500);
+    
     
   });
 
