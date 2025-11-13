@@ -126,4 +126,29 @@ describe('EJEMPLOS PRACTICOS DE PRUEBAS DE INTEGRACION', () => {
     expect(res.statusCode).toBe(200);
     expect(res.body).toEqual([]);
   });
+
+
+  // Prueba para actualizar una tarea que no existe
+  test('should return a 404 when updating a non-existent task', async () => {
+    const nonExistentId = new mongoose.Types.ObjectId(); // Genera un ID válido que no existe en la base de datos
+
+    const res = await request(app)
+      .put(`/api/tareas/${nonExistentId}`)
+      .send({ title: 'Updated Title', completed: true });
+
+      expect(res.statusCode).toBe(404);
+      expect(res.body.error).toBe('Not found');
+  })
+
+  // Prueba para eliminar una tarea que no existe
+  test('should return a 404 when deleting a non-existent task', async () => {
+    const nonExistentId = new mongoose.Types.ObjectId(); // Genera un ID válido que no existe en la base de datos
+
+    const res = await request(app)
+      .delete(`/api/tareas/${nonExistentId}`);
+
+      expect(res.statusCode).toBe(404);
+      expect(res.body.error).toBe('Not found');
+  });
+
 });
